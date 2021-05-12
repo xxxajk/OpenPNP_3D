@@ -1,0 +1,14 @@
+config BR2_PACKAGE_PYTHON_PICAMERA
+	bool "python-picamera"
+	depends on BR2_aarch64 || BR2_arm
+	depends on BR2_TOOLCHAIN_HAS_THREADS
+	depends on !BR2_STATIC_LIBS
+	depends on BR2_PACKAGE_PYTHON_NUMPY_ARCH_SUPPORTS
+	select BR2_PACKAGE_PYTHON_NUMPY
+	help
+	  A pure Python interface for the Raspberry Pi camera module.
+
+	  http://picamera.readthedocs.io/
+comment "picamera needs a toolchain w/ threads and dynamic library"
+	depends on BR2_aarch64 || BR2_arm
+	depends on !BR2_TOOLCHAIN_HAS_THREADS || BR2_STATIC_LIBS

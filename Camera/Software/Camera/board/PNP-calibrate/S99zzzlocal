@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+# Because of busybox problems/bugs, we get around an issue by
+# doing a manual netwok interface up for ipv6 here --AJK
+/sbin/ifup wlan0:0
+
+# Enable i2c to the camera
+/sbin/modprobe i2c-dev
+
+# run the camera streamer
+/sbin/stream
+
+exit 0

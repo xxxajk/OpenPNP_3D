@@ -1,0 +1,12 @@
+# OpenPNP config
+start_file=start.elf
+fixup_file=fixup.dat
+
+kernel=zImage
+
+disable_overscan=1
+gpu_mem=64
+dtoverlay=i2c0,pins_0_1
+
+# fixes rpi (3B, 3B+, 3A+, 4B and Zero W) ttyAMA0 serial console
+dtoverlay=miniuart-bt

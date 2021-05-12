@@ -1,0 +1,19 @@
+auto lo
+iface lo inet loopback
+iface lo inet6 loopback
+
+auto wlan0
+iface wlan0 inet dhcp
+    udhcpc_opts -t 10
+    wireless_mode managed
+    wireless_essid any
+    pre-up wpa_supplicant -D nl80211 -i wlan0 -c /etc/wpa_supplicant.conf -B
+    post-down killall -q wpa_supplicant
+    wait-delay 15
+
+iface wlan0:0 inet6 static
+    address fd00:f00d:dead:beef::2
+    netmask 64
+    post-up /etc/init.d/S50radvd restart
+    gateway fe80::1
+

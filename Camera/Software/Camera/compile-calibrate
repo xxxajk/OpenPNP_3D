@@ -1,0 +1,27 @@
+#!/bin/bash
+BUILDROOT_DIR=${BUILDROOT_DIR:-buildroot}
+if [ ! -d "$BUILDROOT_DIR/.success" ]; then
+  echo "buildroot not found, you must run ./compile-head first."
+  exit 1
+fi
+
+export BOARDNAME=PNP-calibrate
+export BR2_DL_DIR="$(pwd)/downloads"
+
+# Merge custom buildroot configurations
+CONFIG_="BR2" KCONFIG_CONFIG="configs/${BOARDNAME}_defconfig" "$BUILDROOT_DIR/support/kconfig/merge_config.sh" -m -r configs/config "configs/$BOARDNAME"
+sed "1i ### DO NOT EDIT, this file was automatically generated\n" -i "configs/${BOARDNAME}_defconfig"
+
+# Merge kernel configurations
+if [ -f "board/${BOARDNAME}/linux-${BOARDNAME}.config" ]; then
+  KCONFIG_CONFIG="board/${BOARDNAME}/linux.config" "$BUILDROOT_DIR/support/kconfig/merge_config.sh" -m -r board/${BOARDNAME}/linux-base.config "board/${BOARDNAME}/linux-${BOARDNAME}.config"
+else
+  cp board/${BOARDNAME}/linux-base.config board/${BOARDNAME}/linux.config
+fi
+sed "1i ### DO NOT EDIT, this file was automatically generated\n" -i board/${BOARDNAME}/linux.config
+
+# Create full buildroot configuration
+BR2_EXTERNAL="$(pwd)" make O="$(pwd)/output/$BOARDNAME" -C "$BUILDROOT_DIR" "${BOARDNAME}_defconfig"
+
+# Build
+make -C "output/$BOARDNAME" all
