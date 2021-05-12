@@ -46,24 +46,35 @@ within 30 seconds, and camera should be running within 20 seconds after that
 because python is a little bit slow to start.
 
 Default root password is picam, you should probabbly change it.
+
 Default password can be changed in the config file for each camera.
+
 PNP-head_defconfig:BR2_TARGET_GENERIC_ROOT_PASSWD="picam"
+
 PNP-calibrate_defconfig:BR2_TARGET_GENERIC_ROOT_PASSWD="picam"
 
 Networking:
 Default network SSID is "PNP_Network_1", passphrase is OpenPNP_1
+
 To adjust these, change BOTH files: 
+
 board/PNP-head/wpa_supplicant.conf
+
 and
+
 board/PNP-calibrate/wpa_supplicant.conf
+
 On the Linux host, enable DHCP, but only for IPv4. This is because the host
 will get it's IPv6 address from the head camera. 
 
 You can use SSH to access both cameras
+
 head camera is at fd00:f00d:dead:beef::1
+
 calibrate camera is at fd00:f00d:dead:beef::2
 
 ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" root@fd00:f00d:dead:beef::1
+
 ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" root@fd00:f00d:dead:beef::2
 
 Wait! There's more!! 
@@ -72,11 +83,17 @@ directly from the host PC over the WiFi without adding any additional
 software on the Pi.
 
 Python:
+
 Host can use pigpio for Python by installing it from Pypi:
+
 Python3:
+
 sudo pip3 install pigpio
+
 Python2:
+
 sudo pip2 install pigpio
+
 More information on this is avilable at http://abyz.me.uk/rpi/pigpio/python.html
 You can install it for both Python versions.
 
