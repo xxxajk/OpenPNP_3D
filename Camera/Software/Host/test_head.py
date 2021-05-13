@@ -93,7 +93,6 @@ class UDPv4l2 (threading.Thread):
                                         self.pi.i2c_write_device(self.I2C, [data1, data2])
                                         break
                                 except:
-                                        time.sleep(0.01)
                                         pass
                 
         def set_xrez(self, val):
@@ -124,14 +123,16 @@ class UDPv4l2 (threading.Thread):
                 self.device=open(self.viddev, 'wb')
                 self.pi=pigpio.pi(self.daddr)
                 self.I2C=self.pi.i2c_open(0, 0x0c)
-                print(self.I2C)
-                self.set_focus(self.focal_distance)
-                print(self.I2C)
+                self.set_xrez(self.xres)
+                self.set_yrez(self.yres)
+                self.set_fps(self.rate)
+                self.set_rotation(self.angle)
                 self.set_xrez(self.xres)
                 self.set_yrez(self.yres)
                 self.set_fps(self.rate)
                 self.set_rotation(self.angle)
                 self.ping_cam()
+                self.set_focus(self.focal_distance)
                 # start streaming
                 self.set_stream_on()
                 cp = dump_buffer(self.s)
