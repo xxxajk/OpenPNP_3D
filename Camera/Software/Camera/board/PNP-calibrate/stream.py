@@ -171,6 +171,9 @@ else:
 		# 'off' 'auto' 'sunlight' 'cloudy' 'shade' 'tungsten'
 		# 'fluorescent' 'incandescent' 'flash' 'horizon'
 		camera.awb_mode = 'shade'
+		camera.exposure_mode = 'off'
+		#camera.exposure_mode = 'fixedfps'
+		#camera.shutter_speed = 33
 		s = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
 		s.setblocking(0)
 		s.bind(('::', 12345))
@@ -189,24 +192,30 @@ else:
 						last_add = add
 						last_por = por
 					elif cmd == b'x': # set video width
-						camera.stop_recording()
+						if camera.recording:
+							camera.stop_recording()
 						camwid = arg
 						camera.resolution = (camwid, camhig)
 						camera.start_recording(output, format='mjpeg')
 					elif cmd == b'y': # set video height
-						camera.stop_recording()
+						if camera.recording:
+							camera.stop_recording()
 						camhig = arg
 						camera.resolution = (camwid, camhig)
 						camera.start_recording(output, format='mjpeg')
 					elif cmd == b'r': # set video frame rate
-						camera.stop_recording()
+						if camera.recording:
+							camera.stop_recording()
 						camera.framerate=arg
 						camera.start_recording(output, format='mjpeg')
 					elif cmd == b'a': # set camera rotation
-						camera.stop_recording()
+						if camera.recording:
+							camera.stop_recording()
 						camera.rotation=arg						
 						camera.start_recording(output, format='mjpeg')
 					elif cmd == b'q': # quit UDP stream
+						if camera.recording:
+							camera.stop_recording()
 						udpstream.newport(add, 0)
 					elif cmd == b's': # start UDP stream
 						udpstream.newport(add, por)
@@ -225,6 +234,7 @@ else:
 			udpstream.death()
 			udpstream.join()
 			s.close()
-			camera.stop_recording()
+			if camera.recording:
+				camera.stop_recording()
 			camera.close()
 
